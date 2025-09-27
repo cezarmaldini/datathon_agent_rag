@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     bm25_model_name: str = "Qdrant/bm25"
     late_interaction_model_name: str = "colbert-ir/colbertv2.0"
 
+    # Supabase Settings
+    supabase_url: str = os.getenv('SUPABASE_URL')
+    supabase_api_key: str = os.getenv('SUPABASE_API_KEY')
+    supabase_bucket_name: str = 'curriculos'
+
 class ResumeCurriculum(BaseModel):
     name: str = Field(description='Nome do candidato')
     email: str = Field(description='Endereço de email do candidato')

@@ -1,4 +1,6 @@
 import uuid
+import re
+import unicodedata
 from typing import List
 from tqdm.auto import tqdm
 
@@ -123,31 +125,46 @@ def upload_in_batches(settings: Settings, points: List[PointStruct], batch_size:
         f"Successfully uploaded {len(points)} points to collection '{collection_name}'"
     )
 
+def upload_document_bucket(settings: Settings, file_name: str):
+    nfkd = unicodedata.normalize("NFKD", file_name)
+    no_accent = "".join([c for c in nfkd if not unicodedata.combining(c)])
+    file = re.sub(r'[^a-zA-Z0-9._\- ()]', "_", no_accent)
+
+    supabase_client = clients.new_supabase_client(settings)
+    bucket_name = settings.supabase_bucket_name
+
+    with open(file_name, "rb") as f:
+        supabase_client.storage.from_(bucket_name).upload(
+            path=file,
+            file=f
+        )
+
 def ingest_documents():
     settings = Settings()
 
     create_collection.create_collections(settings)
 
-    file = 'teste.pdf'
-
-    doc = parse_document(files=file, settings=settings)
-
-    chunks = create_chunks(documents=doc, settings=settings)
-
-    metadata = extract_metadata(files='teste.pdf', settings=settings)
-
     embedding_models = initialize_embedding_models(settings=settings)
 
-    points = []
+    files = ['data/teste.pdf'] # Deve ser substituído pelos arquivos que forem enviados no streamlit
 
-    for chunk in chunks:
-        point = create_points(chunk=chunk, embedding_models=embedding_models, metadata=metadata, file_name=file)
-        points.append(point)
+    for file in files:
+        #file_name = file_name >>> Nome do Arquivo
+        #file_content = file_content >>> Conteúdo do arquivo
+
+        doc = parse_document(files=file, settings=settings)
+
+        chunks = create_chunks(documents=doc, settings=settings)
+
+        metadata = extract_metadata(files=file, settings=settings)
+
+        points = []
+
+        for chunk in chunks:
+            point = create_points(chunk=chunk, embedding_models=embedding_models, metadata=metadata, file_name=file)
+            points.append(point)
 
     if points:
         upload_in_batches(settings=settings, points=points)
     else:
-        print("Nenhum ponto gerado para upload.") 
-
-if __name__ == '__main__':
-    ingest_documents()
+        print("Nenhum ponto gerado para upload.")
