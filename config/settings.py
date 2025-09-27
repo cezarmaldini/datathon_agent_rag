@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from typing import Optional
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
 load_dotenv()
@@ -23,9 +24,15 @@ class Settings(BaseSettings):
     llama_cloud_language: str = 'pt'
 
     # Model Settings
-    dense_model_name: str = (
-        "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
-    )
+    dense_model_name: str = ("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
     dense_model_max_tokens: int = 768
     bm25_model_name: str = "Qdrant/bm25"
     late_interaction_model_name: str = "colbert-ir/colbertv2.0"
+
+class ResumeCurriculum(BaseModel):
+    name: str = Field(description='Nome do candidato')
+    email: str = Field(description='Endereço de email do candidato')
+    fone: str = Field(description='Telefone de contato do candidato')
+    local: str = Field(description='Cidade e Estado do candidato (Exemplo: São Paulo/SP)')
+    sumary: str = Field(description='Resumo do currículo do candidato')
+    skills: list[str] = Field(description='Habilidades em tecnologia do candidato')
