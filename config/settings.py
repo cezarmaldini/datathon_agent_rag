@@ -7,32 +7,41 @@ from pydantic_settings import BaseSettings
 load_dotenv()
 
 class Settings(BaseSettings):
-    # API Settings
+    # API
     api_title: str = 'Datathon'
     api_description: str = 'Datathon'
     api_version: str = '0.1.0'
 
-    # Qdrant Settings
+    # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')
     qdrant_api_key: str = os.getenv('QDRANT_API_KEY')
     qdrant_collection_name: str = os.getenv('QDRANT_COLLECTION_NAME')
     qdrant_timeout: float = 60.0
     qdrant_prefetch_limit: int = 25
 
-    # LLamaCloud Settings
+    # LLamaCloud
     llama_cloud_api_key: str = os.getenv('LLAMA_CLOUD_API_KEY')
     llama_cloud_language: str = 'pt'
 
-    # Model Settings
+    # Models
     dense_model_name: str = ("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
     dense_model_max_tokens: int = 768
     bm25_model_name: str = "Qdrant/bm25"
     late_interaction_model_name: str = "colbert-ir/colbertv2.0"
 
-    # Supabase Settings
+    # Supabase
     supabase_url: str = os.getenv('SUPABASE_URL')
     supabase_api_key: str = os.getenv('SUPABASE_API_KEY')
     supabase_bucket_name: str = 'curriculos'
+
+    # Postgres Supabase
+    postgres_user: str = os.getenv('POSTGRES_USER')
+    postgres_password: str = os.getenv('POSTGRES_PASSWORD')
+    postgres_host: str = os.getenv('POSTGRES_HOST')
+    postgres_port: str = os.getenv('POSTGRES_PORT')
+    postgres_database: str = os.getenv('POSTGRES_DATABASE')
+
+
 
 class ResumeCurriculum(BaseModel):
     name: str = Field(description='Nome do candidato')
