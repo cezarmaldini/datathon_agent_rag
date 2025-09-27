@@ -1,11 +1,10 @@
+import asyncio
 import uuid
 from typing import List
 from tqdm.auto import tqdm
 
 from config import clients
 from config.settings import Settings, ResumeCurriculum
-
-from pipeline import create_collection
 
 from llama_cloud_services import LlamaParse
 from llama_cloud_services import LlamaExtract
@@ -17,19 +16,20 @@ from fastembed.sparse.bm25 import Bm25
 from fastembed.late_interaction import LateInteractionTextEmbedding
 from qdrant_client.http.models import PointStruct
 
-def parse_document(files, settings: Settings):
-    print(f"Iniciando o parse do arquivo: {files}...")
+# Parse
+async def parse_document(files, settings: Settings):
     parser = LlamaParse(
         api_key=settings.llama_cloud_api_key,
-        result_type='markdown',
-        language=settings.llama_cloud_language
+        result_type="markdown",
+        language=settings.llama_cloud_language,
     )
+    tasks = []
+    for f in files:
+        f.seek(0)
+        tasks.append(parser.aparse(f, extra_info={"file_name": f.name}))
+    return await asyncio.gather(*tasks)
 
-    documents = parser.load_data(files)
-    print(f"Parse concluído. {len(documents)} documento(s) extraído(s).")
-    
-    return documents
-
+# Chunks
 def create_chunks(documents, settings: Settings):
     max_tokens = settings.dense_model_max_tokens
     model_name = settings.dense_model_name
@@ -41,29 +41,34 @@ def create_chunks(documents, settings: Settings):
         tokenizer=tokenizer
     )
 
-    print("Iniciando a criação dos chunks...")
     nodes = node_parser.get_nodes_from_documents(documents=documents)
     print(f"Criação de chunks concluída. {len(nodes)} chunks gerados.")
 
     return nodes
 
+# Extract Metadata
 def extract_metadata(files, settings: Settings):
-    extractor = LlamaExtract(
-        api_key=settings.llama_cloud_api_key
-    )
+    extractor = LlamaExtract(api_key=settings.llama_cloud_api_key)
 
     agents = extractor.list_agents()
     names = [a.name for a in agents]
 
-    if 'resume-curriculum' in names:
-        agent_extract = extractor.get_agent(name='resume-curriculum')
+    if "resume-curriculum" in names:
+        agent_extract = extractor.get_agent(name="resume-curriculum")
     else:
-        agent_extract = extractor.create_agent(name='resume-curriculum', data_schema=ResumeCurriculum)
+        agent_extract = extractor.create_agent(
+            name="resume-curriculum", data_schema=ResumeCurriculum
+        )
 
-    result = agent_extract.extract(files=files)
+    results = []
+    for f in files:
+        f.seek(0)
+        res = agent_extract.extract(files=[f])
+        data_list = [run.data for run in res]
+        results.append(data_list)
+    return results
 
-    return result.data
-
+# Embeddings
 def initialize_embedding_models(settings: Settings):
     dense_embedding_model = TextEmbedding(settings.dense_model_name)
     bm25_embedding_model = Bm25(settings.bm25_model_name)
@@ -82,7 +87,8 @@ def create_embeddings(chunk_text, dense_model, bm25_model, colbert_model):
         "colbertv2.0": colbert_embedding,
     }
 
-def create_points(chunk, embedding_models, metadata, file_name):
+# Points Qdrant
+def create_points(chunk, embedding_models, metadata, vacancy: str):
     
     dense_model, bm25_model, colbert_model = embedding_models
 
@@ -92,7 +98,10 @@ def create_points(chunk, embedding_models, metadata, file_name):
 
     payload = {
         'text': text,
-        'metadata': metadata
+        'metadata': {
+            **metadata,
+            'vacancy': vacancy
+        }
     }
 
     point = PointStruct(
@@ -107,6 +116,7 @@ def create_points(chunk, embedding_models, metadata, file_name):
 
     return point
 
+# Upload Qdrant
 def upload_in_batches(settings: Settings, points: List[PointStruct], batch_size: int = 10):
     qdrant_client = clients.new_qdrant_client(settings)
     collection_name = settings.qdrant_collection_name
@@ -122,32 +132,3 @@ def upload_in_batches(settings: Settings, points: List[PointStruct], batch_size:
     print(
         f"Successfully uploaded {len(points)} points to collection '{collection_name}'"
     )
-
-def ingest_documents():
-    settings = Settings()
-
-    create_collection.create_collections(settings)
-
-    file = 'teste.pdf'
-
-    doc = parse_document(files=file, settings=settings)
-
-    chunks = create_chunks(documents=doc, settings=settings)
-
-    metadata = extract_metadata(files='teste.pdf', settings=settings)
-
-    embedding_models = initialize_embedding_models(settings=settings)
-
-    points = []
-
-    for chunk in chunks:
-        point = create_points(chunk=chunk, embedding_models=embedding_models, metadata=metadata, file_name=file)
-        points.append(point)
-
-    if points:
-        upload_in_batches(settings=settings, points=points)
-    else:
-        print("Nenhum ponto gerado para upload.") 
-
-if __name__ == '__main__':
-    ingest_documents()
