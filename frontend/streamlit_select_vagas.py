@@ -8,15 +8,16 @@ def streamlit_select_vagas(url: str):
             vagas = response.json()['vagas']
             vaga_options = [f"{vaga['titulo_vaga']} - {vaga['nivel_profissional']} - {vaga['modalidade']} - {vaga['tipo_contratacao']}" 
                         for vaga in vagas]
+            
+            select_vacancy = st.selectbox(
+                'Vaga de destino:',
+                vaga_options,
+                help="Escolha a vaga que será associada a todos os currículos enviados"
+            )
+            
+            # Retornar apenas o texto selecionado
+            return select_vacancy
         else:
-            vaga_options = ['Erro ao carregar vagas']
+            return None
     except:
-        vaga_options = ['Erro de conexão']
-
-    select_vacancy = st.selectbox(
-        'Vaga de destino:',
-        vaga_options,
-        help="Escolha a vaga que será associada a todos os currículos enviados"
-    )
-
-    return select_vacancy
+        return None

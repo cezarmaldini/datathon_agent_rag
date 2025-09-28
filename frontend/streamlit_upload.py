@@ -104,7 +104,7 @@ def streamlit_upload(url: str):
                     
                     # Resumo do processamento
                     with st.expander("📊 Resumo do Processamento", expanded=True):
-                        col1, col2, col3 = st.columns(2)
+                        col1, col2 = st.columns(2)
                         with col1:
                             st.metric("Arquivos Processados", len(uploaded_files))
                         with col2:

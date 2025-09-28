@@ -2,6 +2,7 @@ from config.settings import Settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.vaga_routers import router as vaga_router
+from app.routers.search import router as search_router
 
 def get_settings():
     return Settings()
@@ -28,14 +29,7 @@ def create_application():
 
     # Add routers
     app.include_router(vaga_router)
-
-    @app.get("/")
-    async def root():
-        return {"message": "Sistema de Gestão de Vagas API"}
-
-    @app.get("/health")
-    async def health_check():
-        return {"status": "healthy"}
+    app.include_router(search_router)
     
     return app
 

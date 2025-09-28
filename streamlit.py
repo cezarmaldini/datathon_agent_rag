@@ -1,14 +1,18 @@
-import io
-import asyncio
+import requests
 import streamlit as st
 from streamlit_option_menu import option_menu
 from config.settings import Settings
-from frontend import streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, streamlit_update_vagas, streamlit_delete_vagas, streamlit_select_vagas
+from frontend import (
+    streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, 
+    streamlit_update_vagas, streamlit_delete_vagas, streamlit_select_vagas,
+    streamlit_sumary_vagas, streamlit_search
+)
 
 settings = Settings()
 
 api_base_url = settings.api_url_local
 url_api_vagas = f'{api_base_url}/vagas'
+url_api_search = f'{api_base_url}/search'
 
 # Configuração inicial da aplicação
 st.set_page_config(
@@ -70,5 +74,16 @@ elif option == 'Relatórios':
     st.title("📊 Relatórios | Análise de Candidatos")
     st.markdown("---")
 
-    streamlit_select_vagas.streamlit_select_vagas(url=url_api_vagas)
+    vaga_selecionada = streamlit_select_vagas.streamlit_select_vagas(url=url_api_vagas)
+    resumo_vaga = streamlit_sumary_vagas.streamlit_sumary_vagas(url=url_api_vagas, vaga_selecionada=vaga_selecionada)
 
+    with st.expander("📃 Resumo da Vaga", expanded=False):
+        st.markdown(resumo_vaga)
+
+    query = f"""
+    Busque os candidatos mais adequados para esta vaga, considerando:
+    
+    {resumo_vaga}
+    
+    """
+    streamlit_search.streamlit_search(url=url_api_search, query=query)
