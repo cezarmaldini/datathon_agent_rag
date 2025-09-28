@@ -3,11 +3,12 @@ import asyncio
 import streamlit as st
 from streamlit_option_menu import option_menu
 from config.settings import Settings
-from frontend import streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, streamlit_update_vagas, streamlit_delete_vagas
+from frontend import streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, streamlit_update_vagas, streamlit_delete_vagas, streamlit_select_vagas
 
 settings = Settings()
 
 api_base_url = settings.api_url_local
+url_api_vagas = f'{api_base_url}/vagas'
 
 # Configuração inicial da aplicação
 st.set_page_config(
@@ -31,8 +32,6 @@ if option == 'Vagas':
     st.title('🧑‍💻 Banco de Dados de Vagas')
 
     tab1, tab2, tab3, tab4 = st.tabs(['📋 Vagas', '➕ Cadastrar', '✏️ Editar', '🗑️ Excluir'])
-
-    url_api_vagas = f'{api_base_url}/vagas'
 
     with tab1:
         streamlit_get_vagas.streamlit_get_vagas(url=url_api_vagas)
@@ -63,5 +62,13 @@ elif option == 'Upload':
         
         **Formato suportado:** PDF, DOCX
         """)
-    url_api_vagas = f'{api_base_url}/vagas'
+    
     streamlit_upload.streamlit_upload(url=url_api_vagas)
+
+elif option == 'Relatórios':
+    # Header da página
+    st.title("📊 Relatórios | Análise de Candidatos")
+    st.markdown("---")
+
+    streamlit_select_vagas.streamlit_select_vagas(url=url_api_vagas)
+
