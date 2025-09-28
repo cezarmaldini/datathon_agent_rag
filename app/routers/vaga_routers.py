@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from typing import List, Optional
 
-from app.models.vaga_models import (
+from app.models.schema_vagas import (
     VagaCreate, 
     VagaUpdate, 
     VagaResponse, 
     VagasListResponse
 )
-from app.services.vaga_crud import VagaCRUD
+from app.services.crud import VagaCRUD
 from config.clients import get_db
 
 router = APIRouter(prefix="/vagas", tags=["vagas"])

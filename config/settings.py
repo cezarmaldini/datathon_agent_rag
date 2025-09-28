@@ -8,9 +8,9 @@ load_dotenv()
 
 class Settings(BaseSettings):
     # API
-    api_title: str = 'Datathon'
+    api_title: str = 'DATATHON | PÓS TECH'
     api_description: str = 'Datathon'
-    api_version: str = '0.1.0'
+    api_version: str = '1.0'
 
     # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')

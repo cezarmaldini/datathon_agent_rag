@@ -1,29 +1,42 @@
+from config.settings import Settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import vaga_routers
+from app.routers.vaga_routers import router as vaga_router
 
-app = FastAPI(
-    title="Sistema de Gestão de Vagas",
-    description="API para gerenciamento de vagas de emprego",
-    version="1.0.0"
-)
+def get_settings():
+    return Settings()
 
-# Configuração de CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Em produção, especifique os domínios
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def create_application():
+    settings = get_settings()
 
-# Incluir routers
-app.include_router(vaga_routers.router)
+    app = FastAPI(
+        title=settings.api_title,
+        description=settings.api_description,
+        version=settings.api_version
+    )
 
-@app.get("/")
-async def root():
-    return {"message": "Sistema de Gestão de Vagas API"}
+    app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+            ],  # Frontend local
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
+    # Add routers
+    app.include_router(vaga_router)
+
+    @app.get("/")
+    async def root():
+        return {"message": "Sistema de Gestão de Vagas API"}
+
+    @app.get("/health")
+    async def health_check():
+        return {"status": "healthy"}
+    
+    return app
+
+app = create_application()

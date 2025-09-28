@@ -4,7 +4,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 
-class VagaBase(BaseModel):
+class SchemaVagas(BaseModel):
     titulo: str = Field(..., min_length=1, max_length=200, description="Título da vaga")
     descricao: str = Field(..., min_length=1, description="Descrição detalhada da vaga")
     requisitos: List[str] = Field(..., description="Lista de requisitos para a vaga")
@@ -16,7 +16,7 @@ class VagaBase(BaseModel):
     ativa: bool = Field(default=True, description="Status da vaga (ativa/inativa)")
 
 
-class VagaCreate(VagaBase):
+class VagaCreate(SchemaVagas):
     pass
 
 
@@ -32,7 +32,7 @@ class VagaUpdate(BaseModel):
     ativa: Optional[bool] = Field(None)
 
 
-class VagaInDB(VagaBase):
+class VagaInDB(SchemaVagas):
     id: UUID = Field(default_factory=uuid4)
     criada_em: datetime = Field(default_factory=datetime.utcnow)
     atualizada_em: datetime = Field(default_factory=datetime.utcnow)

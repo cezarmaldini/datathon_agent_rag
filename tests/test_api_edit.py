@@ -1,10 +1,10 @@
 import requests
 
-vaga_id = "id-da-vaga-criada"
-url = f"http://localhost:8000/vagas/{vaga_id}"
+vaga_id = "f9dc2061-3c31-4acc-be92-443950395d3c"
+url = f"http://localhost:8001/vagas/{vaga_id}"
 
 update_data = {
-    "titulo": "Desenvolvedor Python Pleno",
+    "titulo": "Teste",
     "salario": "R$ 6000 - R$ 8000",
     "nivel_experiencia": "Pleno"
 }

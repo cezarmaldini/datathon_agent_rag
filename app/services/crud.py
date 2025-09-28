@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi import HTTPException, status
 import logging
-from app.models.vaga_models import VagaCreate, VagaUpdate, VagaInDB
+from app.models.schema_vagas import VagaCreate, VagaUpdate, VagaInDB
 
 logger = logging.getLogger(__name__)
 
