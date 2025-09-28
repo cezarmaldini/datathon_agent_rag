@@ -1,19 +1,36 @@
 import io
 import asyncio
+import requests
 import streamlit as st
 from pipeline import ingestion, create_collection
 from config.settings import Settings
 
-def streamlit_upload():  
+def streamlit_select_vagas(url: str):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            vagas = response.json()['vagas']
+            vaga_options = [f"{vaga['titulo_vaga']} - {vaga['nivel_profissional']} - {vaga['modalidade']} - {vaga['tipo_contratacao']}" 
+                        for vaga in vagas]
+        else:
+            vaga_options = ['Erro ao carregar vagas']
+    except:
+        vaga_options = ['Erro de conexão']
+
+    select_vacancy = st.selectbox(
+        'Vaga de destino:',
+        vaga_options,
+        help="Escolha a vaga que será associada a todos os currículos enviados"
+    )
+
+    return select_vacancy
+
+def streamlit_upload(url: str):  
     # Seção de seleção de vaga
     st.subheader("Seleção da Vaga")
     st.markdown("Selecione a vaga para a qual deseja cadastrar os currículos:")
 
-    select_vacancy = st.selectbox(
-        'Vaga de destino:',
-        ('Vaga 1', 'Vaga 2', 'Vaga 3'),
-        help="Escolha a vaga que será associada a todos os currículos enviados"
-    )
+    select_vacancy = streamlit_select_vagas(url)
     
     # Seção de upload
     st.subheader("Upload dos Currículos")
@@ -106,12 +123,10 @@ def streamlit_upload():
                     
                     # Resumo do processamento
                     with st.expander("📊 Resumo do Processamento", expanded=True):
-                        col1, col2, col3 = st.columns(3)
+                        col1, col2, col3 = st.columns(2)
                         with col1:
                             st.metric("Arquivos Processados", len(uploaded_files))
                         with col2:
-                            st.metric("Pontos Criados", len(points))
-                        with col3:
                             st.metric("Vaga Associada", select_vacancy)
                     
                     st.balloons()

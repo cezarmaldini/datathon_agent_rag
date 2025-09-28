@@ -4,7 +4,8 @@ from typing import List
 from tqdm.auto import tqdm
 
 from config import clients
-from config.settings import Settings, ResumeCurriculum
+from config.settings import Settings
+from pipeline.schema_metadata import ResumeCurriculum
 
 from llama_cloud_services import LlamaParse
 from llama_cloud_services import LlamaExtract

@@ -63,5 +63,5 @@ elif option == 'Upload':
         
         **Formato suportado:** PDF, DOCX
         """)
-
-    streamlit_upload.streamlit_upload()
+    url_api_vagas = f'{api_base_url}/vagas'
+    streamlit_upload.streamlit_upload(url=url_api_vagas)

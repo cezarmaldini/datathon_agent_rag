@@ -41,13 +41,3 @@ class Settings(BaseSettings):
     postgres_host: str = os.getenv('POSTGRES_HOST')
     postgres_port: str = os.getenv('POSTGRES_PORT')
     postgres_database: str = os.getenv('POSTGRES_DATABASE')
-
-
-
-class ResumeCurriculum(BaseModel):
-    name: str = Field(description='Nome do candidato')
-    email: str = Field(description='Endereço de email do candidato')
-    fone: str = Field(description='Telefone de contato do candidato')
-    local: str = Field(description='Cidade e Estado do candidato (Exemplo: São Paulo/SP)')
-    sumary: str = Field(description='Resumo do currículo do candidato')
-    skills: list[str] = Field(description='Habilidades em tecnologia do candidato')
