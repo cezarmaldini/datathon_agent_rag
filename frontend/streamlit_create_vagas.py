@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, date
 
 def streamlit_create_vagas(url: str):
     st.subheader("Cadastrar Nova Vaga")
@@ -10,36 +10,54 @@ def streamlit_create_vagas(url: str):
         col1, col2 = st.columns(2)
             
         with col1:
-            titulo = st.text_input("Título da Vaga*")
-            localizacao = st.text_input("Localização")
-            salario = st.text_input("Salário")
-            tipo_contrato = st.selectbox("Tipo de Contrato*", 
-                                        ["CLT", "PJ", "Freelancer", "Estágio"])
+            data_requisicao = st.date_input("Data da Requisição*", value=date.today())
+            titulo_vaga = st.text_input("Título da Vaga*")
+            cidade = st.text_input("Cidade*")
+            estado = st.text_input("Estado (Sigla)*", max_chars=2)
+            tipo_contratacao = st.selectbox("Tipo de Contratação*", 
+                                          ["CLT", "PJ", "Freelancer", "Estágio"])
+            nivel_profissional = st.selectbox("Nível Profissional*", 
+                                            ["Júnior", "Pleno", "Sênior"])
             
         with col2:
-            nivel = st.selectbox("Nível de Experiência*", 
-                                   ["Júnior", "Pleno", "Sênior"])
+            nivel_academico = st.selectbox("Nível Acadêmico*", 
+                                         ["Ensino Médio", "Superior", "Pós-Graduação", "Mestrado", "Doutorado"])
             modalidade = st.selectbox("Modalidade*", 
-                                        ["Presencial", "Híbrido", "Remoto"])
+                                    ["Presencial", "Híbrido", "Remoto"])
+            vaga_pcd = st.checkbox("Vaga para PCD")
             ativa = st.checkbox("Vaga ativa", value=True)
+            pais = st.text_input("País", value="Brasil")
             
-        descricao = st.text_area("Descrição da Vaga*", height=100)
-        requisitos = st.text_area("Requisitos (um por linha)*", height=100,
-                                    help="Digite cada requisito em uma linha separada")
+        principais_atividades = st.text_area("Principais Atividades*", height=100)
+        areas_atuacao = st.text_area("Áreas de Atuação (uma por linha)*", height=80,
+                                   help="Digite cada área em uma linha separada")
+        competencias_tecnicas = st.text_area("Competências Técnicas (uma por linha)*", height=80,
+                                           help="Digite cada competência em uma linha separada")
+        habilidades_comportamentais = st.text_area("Habilidades Comportamentais (uma por linha)*", height=80,
+                                                 help="Digite cada habilidade em uma linha separada")
             
         if st.form_submit_button("Cadastrar Vaga", type="primary"):
-            if titulo and descricao and requisitos:
+            if (titulo_vaga and cidade and estado and principais_atividades and 
+                areas_atuacao and competencias_tecnicas and habilidades_comportamentais):
                 try:
-                    requisitos_lista = [r.strip() for r in requisitos.split('\n') if r.strip()]
+                    areas_lista = [a.strip() for a in areas_atuacao.split('\n') if a.strip()]
+                    competencias_lista = [c.strip() for c in competencias_tecnicas.split('\n') if c.strip()]
+                    habilidades_lista = [h.strip() for h in habilidades_comportamentais.split('\n') if h.strip()]
                         
                     vaga_data = {
-                        "titulo": titulo,
-                        "descricao": descricao,
-                        "requisitos": requisitos_lista,
-                        "salario": salario,
-                        "localizacao": localizacao,
-                        "tipo_contrato": tipo_contrato,
-                        "nivel_experiencia": nivel,
+                        "data_requisicao": str(data_requisicao),
+                        "titulo_vaga": titulo_vaga,
+                        "tipo_contratacao": tipo_contratacao,
+                        "vaga_pcd": vaga_pcd,
+                        "cidade": cidade,
+                        "estado": estado,
+                        "pais": pais,
+                        "nivel_profissional": nivel_profissional,
+                        "nivel_academico": nivel_academico,
+                        "areas_atuacao": areas_lista,
+                        "principais_atividades": principais_atividades,
+                        "competencias_tecnicas": competencias_lista,
+                        "habilidades_comportamentais": habilidades_lista,
                         "modalidade": modalidade,
                         "ativa": ativa
                     }

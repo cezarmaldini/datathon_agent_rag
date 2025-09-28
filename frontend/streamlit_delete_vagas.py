@@ -1,9 +1,8 @@
 import requests
-import pandas as pd
 import streamlit as st
 
 def streamlit_delete_vagas(url: str):
-    st.header("Excluir Vaga")
+    st.subheader("Excluir Vaga")
         
     try:
         response = requests.get(f"{url}/")
@@ -11,7 +10,7 @@ def streamlit_delete_vagas(url: str):
             vagas = response.json()['vagas']
                 
             if vagas:
-                vaga_options = {v['id']: f"{v['titulo']} - {v['nivel_experiencia']} ({'Ativa' if v['ativa'] else 'Inativa'})" 
+                vaga_options = {v['id']: f"{v['titulo_vaga']} - {v['nivel_profissional']} ({'Ativa' if v['ativa'] else 'Inativa'})" 
                                 for v in vagas}
                 vaga_selecionada = st.selectbox("Selecione a vaga para excluir:", 
                                                 options=list(vaga_options.keys()),
@@ -24,9 +23,10 @@ def streamlit_delete_vagas(url: str):
                         st.warning("⚠️ **Atenção:** Esta ação não pode ser desfeita!")
                             
                         with st.expander("Detalhes da Vaga"):
-                            st.write(f"**Título:** {vaga['titulo']}")
-                            st.write(f"**Descrição:** {vaga['descricao']}")
-                            st.write(f"**Nível:** {vaga['nivel_experiencia']}")
+                            st.write(f"**Título:** {vaga['titulo_vaga']}")
+                            st.write(f"**Cidade/Estado:** {vaga['cidade']}/{vaga['estado']}")
+                            st.write(f"**Nível:** {vaga['nivel_profissional']}")
+                            st.write(f"**Modalidade:** {vaga['modalidade']}")
                             st.write(f"**Status:** {'Ativa' if vaga['ativa'] else 'Inativa'}")
                             
                         if st.button("🗑️ Excluir Vaga Permanentemente", type="primary"):
@@ -34,8 +34,8 @@ def streamlit_delete_vagas(url: str):
                                 response = requests.delete(f"{url}/{vaga_selecionada}")
                                     
                                 if response.status_code == 204:
-                                        st.success("Vaga excluída com sucesso!")
-                                        st.rerun()
+                                    st.success("Vaga excluída com sucesso!")
+                                    st.rerun()
                                 else:
                                     st.error(f"Erro ao excluir: {response.text}")
                                         

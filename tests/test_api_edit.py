@@ -1,12 +1,11 @@
 import requests
 
-vaga_id = "f9dc2061-3c31-4acc-be92-443950395d3c"
+vaga_id = "eea2111f-ee7e-4f78-b99a-a35a5fe22c36"
 url = f"http://localhost:8001/vagas/{vaga_id}"
 
 update_data = {
-    "titulo": "Teste",
-    "salario": "R$ 6000 - R$ 8000",
-    "nivel_experiencia": "Pleno"
+    "titulo_vaga": "Desenvolvedor Python Pleno",
+    "nivel_profissional": "Pleno"
 }
 
 response = requests.put(url, json=update_data)

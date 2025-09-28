@@ -1,18 +1,24 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from datetime import datetime
+from datetime import date, datetime
 from uuid import UUID, uuid4
 
 
 class SchemaVagas(BaseModel):
-    titulo: str = Field(..., min_length=1, max_length=200, description="Título da vaga")
-    descricao: str = Field(..., min_length=1, description="Descrição detalhada da vaga")
-    requisitos: List[str] = Field(..., description="Lista de requisitos para a vaga")
-    salario: Optional[str] = Field(None, description="Faixa salarial da vaga")
-    localizacao: Optional[str] = Field(None, description="Localização da vaga")
-    tipo_contrato: str = Field(..., description="Tipo de contrato (CLT, PJ, etc.)")
-    nivel_experiencia: str = Field(..., description="Nível de experiência (Júnior, Pleno, Sênior)")
-    modalidade: str = Field(..., description="Modalidade (Presencial, Híbrido, Remoto)")
+    data_requisicao: date = Field(..., description="Data em que a vaga foi requisitada")
+    titulo_vaga: str = Field(..., min_length=1, max_length=200, description="Título da vaga")
+    tipo_contratacao: str = Field(..., description="Modelo de contratação (CLT, PJ, Freelancer)")
+    vaga_pcd: bool = Field(default=False, description="Se a vaga é específica para PCD")
+    cidade: str = Field(..., description="Cidade da vaga")
+    estado: str = Field(..., max_length=2, description="Estado da vaga (sigla)")
+    pais: str = Field(default="Brasil", description="País da vaga")
+    nivel_profissional: str = Field(..., description="Nível de senioridade (Júnior, Pleno, Sênior)")
+    nivel_academico: str = Field(..., description="Nível acadêmico exigido")
+    areas_atuacao: List[str] = Field(..., description="Áreas de atuação da vaga")
+    principais_atividades: str = Field(..., description="Descrição das principais atividades")
+    competencias_tecnicas: List[str] = Field(..., description="Competências técnicas e tecnologias")
+    habilidades_comportamentais: List[str] = Field(..., description="Habilidades comportamentais")
+    modalidade: str = Field(..., description="Modalidade (Remoto, Híbrido, Presencial)")
     ativa: bool = Field(default=True, description="Status da vaga (ativa/inativa)")
 
 
@@ -21,13 +27,19 @@ class VagaCreate(SchemaVagas):
 
 
 class VagaUpdate(BaseModel):
-    titulo: Optional[str] = Field(None, min_length=1, max_length=200)
-    descricao: Optional[str] = Field(None, min_length=1)
-    requisitos: Optional[List[str]] = Field(None)
-    salario: Optional[str] = Field(None)
-    localizacao: Optional[str] = Field(None)
-    tipo_contrato: Optional[str] = Field(None)
-    nivel_experiencia: Optional[str] = Field(None)
+    data_requisicao: Optional[date] = Field(None)
+    titulo_vaga: Optional[str] = Field(None, min_length=1, max_length=200)
+    tipo_contratacao: Optional[str] = Field(None)
+    vaga_pcd: Optional[bool] = Field(None)
+    cidade: Optional[str] = Field(None)
+    estado: Optional[str] = Field(None, max_length=2)
+    pais: Optional[str] = Field(None)
+    nivel_profissional: Optional[str] = Field(None)
+    nivel_academico: Optional[str] = Field(None)
+    areas_atuacao: Optional[List[str]] = Field(None)
+    principais_atividades: Optional[str] = Field(None)
+    competencias_tecnicas: Optional[List[str]] = Field(None)
+    habilidades_comportamentais: Optional[List[str]] = Field(None)
     modalidade: Optional[str] = Field(None)
     ativa: Optional[bool] = Field(None)
 

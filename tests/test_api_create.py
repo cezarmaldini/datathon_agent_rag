@@ -1,16 +1,23 @@
 import requests
 import json
+from datetime import date
 
 url = "http://localhost:8001/vagas/"
 
 vaga = {
-    "titulo": "Desenvolvedor Python Júnior",
-    "descricao": "Vaga para desenvolvedor Python iniciante",
-    "requisitos": ["Python", "FastAPI", "PostgreSQL"],
-    "salario": "R$ 3000 - R$ 5000",
-    "localizacao": "Remoto",
-    "tipo_contrato": "CLT",
-    "nivel_experiencia": "Júnior",
+    "data_requisicao": str(date.today()),
+    "titulo_vaga": "Desenvolvedor Python Júnior",
+    "tipo_contratacao": "CLT",
+    "vaga_pcd": False,
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "pais": "Brasil",
+    "nivel_profissional": "Júnior",
+    "nivel_academico": "Superior",
+    "areas_atuacao": ["TI", "Desenvolvimento"],
+    "principais_atividades": "Desenvolvimento de aplicações Python com FastAPI",
+    "competencias_tecnicas": ["Python", "FastAPI", "PostgreSQL"],
+    "habilidades_comportamentais": ["Trabalho em equipe", "Comunicação"],
     "modalidade": "Remoto"
 }
 

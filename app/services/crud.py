@@ -16,17 +16,19 @@ class VagaCRUD:
     def criar_vaga(self, vaga: VagaCreate) -> VagaInDB:
         """Cria uma nova vaga no banco de dados"""
         try:
-            # Converter o modelo Pydantic para dicionário
             vaga_dict = vaga.model_dump()
             
-            # Inserir no banco usando SQL nativo do Supabase/PostgreSQL
             query = text("""
                 INSERT INTO vagas (
-                    titulo, descricao, requisitos, salario, localizacao,
-                    tipo_contrato, nivel_experiencia, modalidade, ativa
+                    data_requisicao, titulo_vaga, tipo_contratacao, vaga_pcd,
+                    cidade, estado, pais, nivel_profissional, nivel_academico,
+                    areas_atuacao, principais_atividades, competencias_tecnicas,
+                    habilidades_comportamentais, modalidade, ativa
                 ) VALUES (
-                    :titulo, :descricao, :requisitos, :salario, :localizacao,
-                    :tipo_contrato, :nivel_experiencia, :modalidade, :ativa
+                    :data_requisicao, :titulo_vaga, :tipo_contratacao, :vaga_pcd,
+                    :cidade, :estado, :pais, :nivel_profissional, :nivel_academico,
+                    :areas_atuacao, :principais_atividades, :competencias_tecnicas,
+                    :habilidades_comportamentais, :modalidade, :ativa
                 )
                 RETURNING *
             """)
@@ -64,37 +66,23 @@ class VagaCRUD:
                 detail="Erro interno ao buscar vaga"
             )
 
-    def listar_vagas(
-        self, 
-        skip: int = 0, 
-        limit: int = 100,
-        ativa: Optional[bool] = None
-    ) -> List[VagaInDB]:
+    def listar_vagas(self, skip: int = 0, limit: int = 100) -> List[VagaInDB]:
         """Lista todas as vagas com paginação"""
         try:
-            base_query = "SELECT * FROM vagas"
-            count_query = "SELECT COUNT(*) FROM vagas"
-            conditions = []
-            params = {}
+            query = text("""
+                SELECT * FROM vagas 
+                ORDER BY criada_em DESC 
+                LIMIT :limit OFFSET :skip
+            """)
             
-            if ativa is not None:
-                conditions.append("ativa = :ativa")
-                params["ativa"] = ativa
-            
-            if conditions:
-                where_clause = " WHERE " + " AND ".join(conditions)
-                base_query += where_clause
-                count_query += where_clause
-            
-            base_query += " ORDER BY criada_em DESC LIMIT :limit OFFSET :skip"
-            params.update({"limit": limit, "skip": skip})
+            count_query = text("SELECT COUNT(*) FROM vagas")
             
             # Executar query de contagem
-            count_result = self.db.execute(text(count_query), params)
+            count_result = self.db.execute(count_query)
             total = count_result.scalar()
             
             # Executar query principal
-            result = self.db.execute(text(base_query), params)
+            result = self.db.execute(query, {"limit": limit, "skip": skip})
             vagas = result.fetchall()
             
             return [VagaInDB(**dict(vaga._mapping)) for vaga in vagas], total
@@ -109,21 +97,16 @@ class VagaCRUD:
     def atualizar_vaga(self, vaga_id: UUID, vaga_update: VagaUpdate) -> Optional[VagaInDB]:
         """Atualiza uma vaga existente"""
         try:
-            # Verificar se a vaga existe
             vaga_existente = self.obter_vaga(vaga_id)
             if not vaga_existente:
                 return None
             
-            # Filtrar apenas os campos que foram fornecidos para atualização
             update_data = vaga_update.model_dump(exclude_unset=True)
             if not update_data:
                 return vaga_existente
             
-            # Adicionar timestamp de atualização
-            update_data['atualizada_em'] = text('NOW()')
             update_data['vaga_id'] = str(vaga_id)
             
-            # Construir query dinâmica
             set_clause = ", ".join([f"{key} = :{key}" for key in update_data.keys() if key != 'vaga_id'])
             
             query = text(f"""

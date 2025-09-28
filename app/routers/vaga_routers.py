@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from uuid import UUID
-from typing import List, Optional
+from typing import List
 
 from app.models.schema_vagas import (
     VagaCreate, 
@@ -53,15 +53,14 @@ async def criar_vaga(
 async def listar_vagas(
     pagina: int = Query(1, ge=1, description="Número da página"),
     por_pagina: int = Query(100, ge=1, le=1000, description="Itens por página"),
-    ativa: Optional[bool] = Query(None, description="Filtrar por status da vaga"),
-    crud: VagaCRUD = Depends(get_vaga_crud)
+    crud: VagaCRUD = Depends(get_vaga_crud)  # Removido o parâmetro 'ativa'
 ):
     """
-    Retorna uma lista paginada de vagas. Pode ser filtrada por status (ativa/inativa).
+    Retorna uma lista paginada de vagas.
     """
     try:
         skip = (pagina - 1) * por_pagina
-        vagas, total = crud.listar_vagas(skip=skip, limit=por_pagina, ativa=ativa)
+        vagas, total = crud.listar_vagas(skip=skip, limit=por_pagina)  # Removido 'ativa'
         
         return VagasListResponse(
             vagas=vagas,

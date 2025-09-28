@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     api_title: str = 'DATATHON | PÓS TECH'
     api_description: str = 'Datathon'
     api_version: str = '1.0'
+    api_url_local: str = 'http://localhost:8001'
 
     # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')
