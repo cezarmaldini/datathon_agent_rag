@@ -96,7 +96,7 @@ def streamlit_upload(url: str):
                 progress_bar.progress(90, text="Fazendo upload final...")
                 
                 if points:
-                    ingestion.upload_in_batches(collection_name=select_vacancy, settings=settings, points=points)
+                    ingestion.upload_in_batches(collection_name=select_vacancy, points=points)
                     progress_bar.progress(100, text="Processamento concluído!")
                     
                     # Mensagem de sucesso
