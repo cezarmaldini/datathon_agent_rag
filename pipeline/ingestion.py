@@ -73,7 +73,7 @@ def extract_metadata(files):
 
 # Embeddings
 def initialize_embedding_models():
-    dense_model_name = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
+    dense_model_name = 'sentence-transformers/all-MiniLM-L6-v2'
     bm25_model_name = 'Qdrant/bm25'
     late_interaction_model_name = 'colbert-ir/colbertv2.0'
 
