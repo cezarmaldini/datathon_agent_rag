@@ -193,7 +193,7 @@ def st_update_vagas(url: str):
                                             "ativa": ativa
                                         }
                                             
-                                        response = requests.put(f"{url}/{vaga_selecionada}", json=update_data)
+                                        response = requests.put(f"{url}{vaga_selecionada}", json=update_data)
                                             
                                         if response.status_code == 200:
                                             st.success("Vaga atualizada com sucesso!")
@@ -242,7 +242,7 @@ def st_delete_vagas(url: str):
                             
                         if st.button("🗑️ Excluir Vaga Permanentemente", type="primary"):
                             try:
-                                response = requests.delete(f"{url}/{vaga_selecionada}")
+                                response = requests.delete(f"{url}{vaga_selecionada}")
                                     
                                 if response.status_code == 204:
                                     st.success("Vaga excluída com sucesso!")
