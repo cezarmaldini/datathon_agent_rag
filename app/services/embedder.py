@@ -2,7 +2,6 @@ from fastembed import TextEmbedding
 from fastembed.sparse.bm25 import Bm25
 from app.models.embeddings import QueryEmbeddings, SparseVector
 from fastembed.late_interaction import LateInteractionTextEmbedding
-import os
 
 
 class QueryEmbedder:
