@@ -5,7 +5,6 @@ from tqdm.auto import tqdm
 import streamlit as st
 
 from config import clients
-from config.settings import Settings
 from pipeline.schema_metadata import ResumeCurriculum
 
 from llama_cloud_services import LlamaParse
@@ -33,9 +32,9 @@ async def parse_document(files):
     return await asyncio.gather(*tasks)
 
 # Chunks
-def create_chunks(documents, settings: Settings):
-    max_tokens = settings.dense_model_max_tokens
-    model_name = settings.dense_model_name
+def create_chunks(documents):
+    max_tokens = 768
+    model_name = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     node_parser = SentenceSplitter(
@@ -73,10 +72,14 @@ def extract_metadata(files):
     return results
 
 # Embeddings
-def initialize_embedding_models(settings: Settings):
-    dense_embedding_model = TextEmbedding(settings.dense_model_name)
-    bm25_embedding_model = Bm25(settings.bm25_model_name)
-    colbert_embedding_model = LateInteractionTextEmbedding(settings.late_interaction_model_name)
+def initialize_embedding_models():
+    dense_model_name = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
+    bm25_model_name = 'Qdrant/bm25'
+    late_interaction_model_name = 'colbert-ir/colbertv2.0'
+
+    dense_embedding_model = TextEmbedding(dense_model_name)
+    bm25_embedding_model = Bm25(bm25_model_name)
+    colbert_embedding_model = LateInteractionTextEmbedding(late_interaction_model_name)
 
     return dense_embedding_model, bm25_embedding_model, colbert_embedding_model
 

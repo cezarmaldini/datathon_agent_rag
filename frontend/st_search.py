@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 
 # Busca semântica
-def streamlit_search(url: str, query: str, collection_name: str):
+def st_search(url: str, query: str, collection_name: str):
     if st.button("🔍 Buscar Candidatos", type="primary"):
         with st.spinner("Buscando candidatos..."):
             try:

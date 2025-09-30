@@ -3,15 +3,14 @@ import asyncio
 import requests
 import streamlit as st
 from pipeline import ingestion, create_collection
-from config.settings import Settings
-from frontend.streamlit_select_vagas import streamlit_select_vagas
+from frontend.st_select import st_select
 
-def streamlit_upload(url: str):  
+def st_upload(url: str):  
     # Seção de seleção de vaga
     st.subheader("Seleção da Vaga")
     st.markdown("Selecione a vaga para a qual deseja cadastrar os currículos:")
 
-    select_vacancy = streamlit_select_vagas(url)
+    select_vacancy = st_select(url)
     
     # Seção de upload
     st.subheader("Upload dos Currículos")
@@ -59,9 +58,8 @@ def streamlit_upload(url: str):
                 st.info('📤 **Upload Iniciado...** Aguarde enquanto processamos seus arquivos.')
                 
                 # Configuração inicial
-                settings = Settings()
                 create_collection.create_collections(collection_name=select_vacancy)
-                embedding_models = ingestion.initialize_embedding_models(settings=settings)
+                embedding_models = ingestion.initialize_embedding_models()
                 
                 progress_bar.progress(10, text="Preparando arquivos...")
                 
@@ -77,18 +75,18 @@ def streamlit_upload(url: str):
                 progress_bar.progress(30, text="Analisando documentos...")
                 
                 # Processamento assíncrono
-                results = asyncio.run(ingestion.parse_document(files=in_memory_files, settings=settings))
+                results = asyncio.run(ingestion.parse_document(files=in_memory_files))
                 
                 progress_bar.progress(50, text="Extraindo metadados...")
                 
-                metadata_list = ingestion.extract_metadata(files=in_memory_files, settings=settings)
+                metadata_list = ingestion.extract_metadata(files=in_memory_files)
                 
                 progress_bar.progress(70, text="Processando conteúdo...")
                 
                 for result, meta_list in zip(results, metadata_list):
                     md_docs = result.get_markdown_documents(split_by_page=False)
                     for doc in md_docs:
-                        chunks = ingestion.create_chunks(documents=[doc], settings=settings)
+                        chunks = ingestion.create_chunks(documents=[doc])
                         for chunk in chunks:
                             point = ingestion.create_points(chunk=chunk, embedding_models=embedding_models, metadata=meta_list[0], vacancy=select_vacancy)
                             points.append(point)

@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 
-def streamlit_sumary_vagas(url: str, vaga_selecionada: str):
+def st_summary(url: str, vaga_selecionada: str):
     try:
         response = requests.get(url)
         if response.status_code == 200:

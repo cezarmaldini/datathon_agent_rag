@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 
-def streamlit_llm(url: str, query: str, collection_name: str):
+def st_llm(url: str, query: str, collection_name: str):
     if st.button("🧠 Gerar Análise com IA", type="primary"):
         with st.spinner("Analisando candidatos com IA..."):
             try:
