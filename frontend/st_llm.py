@@ -11,7 +11,7 @@ def st_llm(url: str, query: str, collection_name: str):
                     "collection_name": collection_name
                 }
 
-                response = requests.post(f"{url}", json=llm_data)
+                response = requests.post(url, json=llm_data)
                 
                 if response.status_code == 200:
                     resultado = response.json()
