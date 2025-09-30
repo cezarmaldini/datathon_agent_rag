@@ -2,6 +2,7 @@ import asyncio
 import uuid
 from typing import List
 from tqdm.auto import tqdm
+import streamlit as st
 
 from config import clients
 from config.settings import Settings
@@ -18,11 +19,12 @@ from fastembed.late_interaction import LateInteractionTextEmbedding
 from qdrant_client.http.models import PointStruct
 
 # Parse
-async def parse_document(files, settings: Settings):
+async def parse_document(files):
+    llama_cloud_api_key: str = st.secrets.get('LLAMA_CLOUD_API_KEY')
     parser = LlamaParse(
-        api_key=settings.llama_cloud_api_key,
+        api_key=llama_cloud_api_key,
         result_type="markdown",
-        language=settings.llama_cloud_language,
+        language='pt',
     )
     tasks = []
     for f in files:
@@ -48,8 +50,9 @@ def create_chunks(documents, settings: Settings):
     return nodes
 
 # Extract Metadata
-def extract_metadata(files, settings: Settings):
-    extractor = LlamaExtract(api_key=settings.llama_cloud_api_key)
+def extract_metadata(files):
+    llama_cloud_api_key: str = st.secrets.get('LLAMA_CLOUD_API_KEY')
+    extractor = LlamaExtract(api_key=llama_cloud_api_key)
 
     agents = extractor.list_agents()
     names = [a.name for a in agents]

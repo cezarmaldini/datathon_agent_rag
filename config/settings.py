@@ -13,18 +13,12 @@ class Settings(BaseSettings):
     api_description: str = 'Datathon'
     api_version: str = '1.0'
     api_url_local: str = 'http://localhost:8001'
-    api_url_vagas: str = st.secrets.get('API_URL_VAGAS')
-    api_url_llm: str = st.secrets.get('API_URL_LLM')
 
     # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')
     qdrant_api_key: str = os.getenv('QDRANT_API_KEY')
     qdrant_timeout: float = 60.0
     qdrant_prefetch_limit: int = 25
-
-    # LLamaCloud
-    llama_cloud_api_key: str = st.secrets.get('LLAMA_CLOUD_API_KEY')
-    llama_cloud_language: str = 'pt'
 
     # Models
     dense_model_name: str = ("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
