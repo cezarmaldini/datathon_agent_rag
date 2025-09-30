@@ -33,8 +33,8 @@ async def parse_document(files):
 
 # Chunks
 def create_chunks(documents):
-    max_tokens = 768
-    model_name = 'sentence-transformers/paraphrase-multilingual-mpnet-base-v2'
+    max_tokens = 384
+    model_name = 'sentence-transformers/all-MiniLM-L6-v2'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     node_parser = SentenceSplitter(

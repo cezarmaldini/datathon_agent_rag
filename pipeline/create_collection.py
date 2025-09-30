@@ -17,7 +17,7 @@ def create_collections(collection_name: str):
             collection_name=collection_name,
             vectors_config={
                 # Vetor denso (semântico)
-                "dense": VectorParams(size=768, distance=Distance.COSINE),
+                "dense": VectorParams(size=384, distance=Distance.COSINE),
                 # Vetor de interação tardia (ColBERT)
                 "colbertv2.0": VectorParams(
                     size=128,
