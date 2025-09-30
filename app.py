@@ -1,14 +1,10 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from config.settings import Settings
 from frontend import (
     streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, 
     streamlit_update_vagas, streamlit_delete_vagas, streamlit_select_vagas,
     streamlit_sumary_vagas, streamlit_llm
 )
-
-# Setup
-settings = Settings()
 
 url_api_vagas: str = st.secrets.get('API_URL_VAGAS')
 url_api_llm: str = st.secrets.get('API_URL_LLM')

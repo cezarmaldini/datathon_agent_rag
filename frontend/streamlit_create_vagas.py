@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import streamlit as st
-from datetime import datetime, date
+from datetime import date
 
 def streamlit_create_vagas(url: str):
     st.subheader("Cadastrar Nova Vaga")
