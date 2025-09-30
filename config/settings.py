@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     api_description: str = 'Datathon'
     api_version: str = '1.0'
     api_url_local: str = 'http://localhost:8001'
+    api_url_vagas: str = 'https://datathon-api-o5cep.ondigitalocean.app/vagas/'
+    api_url_llm: str = 'https://datathon-api-o5cep.ondigitalocean.app/llm/'
 
     # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')

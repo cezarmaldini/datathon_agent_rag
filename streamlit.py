@@ -10,9 +10,8 @@ from frontend import (
 # Setup
 settings = Settings()
 
-api_base_url = settings.api_url_local
-url_api_vagas = f'{api_base_url}/vagas'
-url_api_llm = f'{api_base_url}/llm'
+url_api_vagas = settings.api_url_vagas
+url_api_llm = settings.api_url_llm
 
 # Configuração inicial da aplicação
 st.set_page_config(

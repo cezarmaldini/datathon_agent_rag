@@ -1,7 +1,7 @@
 import requests
 
-vaga_id = "5693ce19-37e2-4c83-b063-00bbbcae7d02"
-url = f"http://localhost:8001/vagas/{vaga_id}"
+vaga_id = "ce8596ce-8522-4986-b141-0b8dcf7302af"
+url = f"https://datathon-api-o5cep.ondigitalocean.app/vagas/{vaga_id}"
 
 response = requests.delete(url)
 print(f"Status: {response.status_code}")  # 204 = sucesso

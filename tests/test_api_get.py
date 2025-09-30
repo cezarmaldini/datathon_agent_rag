@@ -1,5 +1,5 @@
 import requests
 
-url = "http://localhost:8001/vagas/"
+url = "https://datathon-api-o5cep.ondigitalocean.app/vagas/"
 response = requests.get(url)
 print(response.json())

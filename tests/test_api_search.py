@@ -1,12 +1,12 @@
 import requests
 
 query = 'Desenvolvedor Junior'
-url = 'http://localhost:8001/search'
+url = 'https://datathon-api-o5cep.ondigitalocean.app/search'
 
 search_data = {
     "query": query,
     "limit": 10,
-    "vacancy": "Desenvolvedor Frontend - Júnior - Presencial - CLT"
+    "collection_name": "Desenvolvedor Frontend - Júnior - Presencial - CLT"
 }
 
 response = requests.post(url, json=search_data)
