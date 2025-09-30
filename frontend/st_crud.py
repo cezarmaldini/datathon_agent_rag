@@ -8,7 +8,7 @@ def st_get_vagas(url: str):
     st.subheader("Vagas Cadastradas")
         
     try:
-        response = requests.get(f"{url}/")
+        response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
             vagas = data['vagas']
@@ -109,7 +109,7 @@ def st_create_vagas(url: str):
                         "ativa": ativa
                     }
                         
-                    response = requests.post(f"{url}/", json=vaga_data)
+                    response = requests.post(url, json=vaga_data)
                         
                     if response.status_code == 201:
                         st.success("Vaga cadastrada com sucesso!")
@@ -127,7 +127,7 @@ def st_update_vagas(url: str):
     st.header("Editar Vaga Existente")
         
     try:
-        response = requests.get(f"{url}/")
+        response = requests.get(url)
         if response.status_code == 200:
             vagas = response.json()['vagas']
                 
@@ -216,7 +216,7 @@ def st_delete_vagas(url: str):
     st.subheader("Excluir Vaga")
         
     try:
-        response = requests.get(f"{url}/")
+        response = requests.get(url)
         if response.status_code == 200:
             vagas = response.json()['vagas']
                 
