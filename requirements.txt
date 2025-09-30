@@ -10,6 +10,7 @@ psycopg2-binary
 qdrant-client
 openai
 pydantic
+pydantic-settings
 fastembed
 llama-cloud-services==0.6.69
 llama-index==0.9.29
