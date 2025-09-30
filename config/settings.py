@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, Field
@@ -12,8 +13,8 @@ class Settings(BaseSettings):
     api_description: str = 'Datathon'
     api_version: str = '1.0'
     api_url_local: str = 'http://localhost:8001'
-    api_url_vagas: str = 'https://datathon-api-o5cep.ondigitalocean.app/vagas/'
-    api_url_llm: str = 'https://datathon-api-o5cep.ondigitalocean.app/llm/'
+    api_url_vagas: str = st.secrets.get('API_URL_VAGAS')
+    api_url_llm: str = st.secrets.get('API_URL_LLM')
 
     # Qdrant
     qdrant_url: str = os.getenv('QDRANT_URL')
@@ -22,7 +23,7 @@ class Settings(BaseSettings):
     qdrant_prefetch_limit: int = 25
 
     # LLamaCloud
-    llama_cloud_api_key: str = os.getenv('LLAMA_CLOUD_API_KEY')
+    llama_cloud_api_key: str = st.secrets.get('LLAMA_CLOUD_API_KEY')
     llama_cloud_language: str = 'pt'
 
     # Models
