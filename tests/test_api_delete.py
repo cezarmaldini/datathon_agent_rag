@@ -1,6 +1,6 @@
 import requests
 
-vaga_id = "6c8e136f-c948-47fa-beea-37cca056a778"
+vaga_id = "5693ce19-37e2-4c83-b063-00bbbcae7d02"
 url = f"http://localhost:8001/vagas/{vaga_id}"
 
 response = requests.delete(url)

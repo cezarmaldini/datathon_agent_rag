@@ -3,11 +3,10 @@ from config.settings import Settings
 from qdrant_client import models
 from qdrant_client.http.models import VectorParams, Distance
 
-def create_collections(settings: Settings):
+def create_collections(settings: Settings, collection_name: str):
     # Setup
     qdrant_client = clients.new_qdrant_client(settings=settings)
-    collection_name = settings.qdrant_collection_name
-
+    
     collections = qdrant_client.get_collections().collections
     collection_names = [collection.name for collection in collections]
 

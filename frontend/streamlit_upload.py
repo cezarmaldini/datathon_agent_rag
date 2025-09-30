@@ -60,7 +60,7 @@ def streamlit_upload(url: str):
                 
                 # Configuração inicial
                 settings = Settings()
-                create_collection.create_collections(settings=settings)
+                create_collection.create_collections(settings=settings, collection_name=select_vacancy)
                 embedding_models = ingestion.initialize_embedding_models(settings=settings)
                 
                 progress_bar.progress(10, text="Preparando arquivos...")
@@ -96,7 +96,7 @@ def streamlit_upload(url: str):
                 progress_bar.progress(90, text="Fazendo upload final...")
                 
                 if points:
-                    ingestion.upload_in_batches(settings=settings, points=points)
+                    ingestion.upload_in_batches(collection_name=select_vacancy, settings=settings, points=points)
                     progress_bar.progress(100, text="Processamento concluído!")
                     
                     # Mensagem de sucesso

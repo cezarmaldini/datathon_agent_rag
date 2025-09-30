@@ -5,14 +5,15 @@ from config.settings import Settings
 from frontend import (
     streamlit_upload, streamlit_get_vagas, streamlit_create_vagas, 
     streamlit_update_vagas, streamlit_delete_vagas, streamlit_select_vagas,
-    streamlit_sumary_vagas, streamlit_search
+    streamlit_sumary_vagas, streamlit_llm
 )
 
+# Setup
 settings = Settings()
 
 api_base_url = settings.api_url_local
 url_api_vagas = f'{api_base_url}/vagas'
-url_api_search = f'{api_base_url}/search'
+url_api_llm = f'{api_base_url}/llm'
 
 # Configuração inicial da aplicação
 st.set_page_config(
@@ -86,4 +87,4 @@ elif option == 'Relatórios':
     {resumo_vaga}
     
     """
-    streamlit_search.streamlit_search(url=url_api_search, query=query)
+    streamlit_llm.streamlit_llm(url=url_api_llm, query=query, collection_name=vaga_selecionada)

@@ -6,6 +6,7 @@ from app.models.embeddings import Document
 class SearchRequest(BaseModel):
     query: str
     limit: Optional[int] = 5
+    collection_name: str = None
 
 
 class SearchResponse(BaseModel):
@@ -18,6 +19,7 @@ class OpenAIRequest(BaseModel):
     temperature: Optional[float] = None
     max_output_tokens: Optional[int] = None
     limit: Optional[int] = 5
+    collection_name: str = None
 
 
 class OpenAIResponse(BaseModel):

@@ -1,6 +1,6 @@
 from config.settings import Settings
 from qdrant_client import QdrantClient
-from supabase import Client, create_client
+from openai import OpenAI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -13,14 +13,14 @@ def new_qdrant_client(settings: Settings):
 
     return qdrant
 
-# Client Supabase
-def new_supabase_client(settings: Settings):
-    url: str = settings.supabase_url
-    api_key: str = settings.supabase_url
 
-    supabase: Client = create_client(supabase_url=url, supabase_key=api_key)
+# Client OpenAI
+def new_openai_client(settings: Settings):
+    api_key = settings.openai_api_key
+    openai = OpenAI(api_key=api_key)
 
-    return supabase
+    return openai
+
 
 # Client Postgres Supabase
 def get_database_url(settings: Settings) -> str:

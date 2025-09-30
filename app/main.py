@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.vaga_routers import router as vaga_router
 from app.routers.search import router as search_router
+from app.routers.llm import router as llm_router
 
 def get_settings():
     return Settings()
@@ -30,6 +31,7 @@ def create_application():
     # Add routers
     app.include_router(vaga_router)
     app.include_router(search_router)
+    app.include_router(llm_router)
     
     return app
 

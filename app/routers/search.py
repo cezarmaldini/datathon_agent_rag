@@ -35,7 +35,7 @@ async def search_documents(
 
         # Search documents using the generated embeddings
         results = retriever.search_documents(
-            embeddings=query_embeddings, limit=request.limit
+            collection_name=request.collection_name, embeddings=query_embeddings, limit=request.limit
         )
 
         return SearchResponse(results=results)

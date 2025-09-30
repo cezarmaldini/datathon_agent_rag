@@ -2,13 +2,14 @@ import requests
 import streamlit as st
 
 # Busca semântica
-def streamlit_search(url: str, query: str):
+def streamlit_search(url: str, query: str, collection_name: str):
     if st.button("🔍 Buscar Candidatos", type="primary"):
         with st.spinner("Buscando candidatos..."):
             try:
                 search_data = {
                     "query": query,
-                    "limit": 10
+                    "limit": 5,
+                    "collection_name": collection_name
                 }
 
                 response = requests.post(f"{url}", json=search_data)

@@ -99,10 +99,8 @@ def create_points(chunk, embedding_models, metadata, vacancy: str):
 
     payload = {
         'text': text,
-        'metadata': {
-            **metadata,
-            'vacancy': vacancy
-        }
+        'option': vacancy,
+        'metadata': metadata
     }
 
     point = PointStruct(
@@ -118,9 +116,8 @@ def create_points(chunk, embedding_models, metadata, vacancy: str):
     return point
 
 # Upload Qdrant
-def upload_in_batches(settings: Settings, points: List[PointStruct], batch_size: int = 10):
+def upload_in_batches(collection_name: str, settings: Settings, points: List[PointStruct], batch_size: int = 10):
     qdrant_client = clients.new_qdrant_client(settings)
-    collection_name = settings.qdrant_collection_name
 
     n_batches = (len(points) + batch_size - 1) // batch_size
 

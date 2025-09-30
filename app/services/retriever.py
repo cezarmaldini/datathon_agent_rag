@@ -3,6 +3,7 @@ from app.models.embeddings import Document, QueryEmbeddings
 from config.settings import Settings
 from config import clients
 from qdrant_client.http.exceptions import UnexpectedResponse
+from qdrant_client.models import Filter, FieldCondition, MatchValue
 from fastapi import HTTPException
 import logging
 
@@ -12,16 +13,15 @@ logger = logging.getLogger(__name__)
 class QdrantRetriever:
     def __init__(self, settings: Settings):
         self.client = clients.new_qdrant_client(settings)
-        self.collection_name = settings.qdrant_collection_name
         self.prefetch_limit = settings.qdrant_prefetch_limit
 
     def search_documents(
-        self, embeddings: QueryEmbeddings, limit: int = 5
+        self, collection_name: str, embeddings: QueryEmbeddings, limit: int = 5
     ) -> List[Document]:
         try:
             # Search using all vector types
             search_result = self.client.query_points(
-                collection_name=self.collection_name,
+                collection_name=collection_name,
                 # First stage: Get candidates using dense and sparse search
                 prefetch=[
                     {
