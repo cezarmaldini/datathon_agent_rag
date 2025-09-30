@@ -11,6 +11,6 @@ qdrant-client
 openai
 pydantic
 fastembed
-llama-cloud-services
-llamaindex
+llama-cloud-services==0.6.69
+llamaindex==0.9.29
 transformers
